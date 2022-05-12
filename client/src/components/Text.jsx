@@ -12,6 +12,9 @@ const styles = StyleSheet.create({
   colorTextSecondary: {
     color: theme.colors.textSecondary,
   },
+  colorTextOnDark: {
+    color: theme.colors.textOnDark,
+  },
   colorPrimary: {
     color: theme.colors.primary,
   },
@@ -27,6 +30,7 @@ export const Text = ({ color, fontSize, fontWeight, style, ...props }) => {
   const textStyle = [
     styles.text,
     color === "textSecondary" && styles.colorTextSecondary,
+    color === "textOnDark" && styles.colorTextOnDark,
     color === "primary" && styles.colorPrimary,
     fontWeight === "bold" && styles.fontWeightBold,
     style,

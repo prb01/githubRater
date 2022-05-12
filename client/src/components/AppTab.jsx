@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   tabText: {
-    color: theme.colors.menuTab,
+    color: theme.colors.textOnDark,
   },
 })
 

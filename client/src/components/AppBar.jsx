@@ -1,5 +1,4 @@
 import { View, StyleSheet, Pressable, Alert } from "react-native"
-import { Subheading, Text } from "./Text"
 import Constants from "expo-constants"
 import theme from "../theme"
 import AppTab from "./AppTab"

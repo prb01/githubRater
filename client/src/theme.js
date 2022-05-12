@@ -2,13 +2,13 @@ const theme = {
   colors: {
     textPrimary: "#24292e",
     textSecondary: "#586069",
+    textOnDark: "#fff",
     primary: "#0366d6",
     menuBackground: "#24292e",
-    menuTab: "#fff",
   },
   fontSizes: {
-    body: 16,
-    subheading: 18,
+    body: 14,
+    subheading: 16,
   },
   fonts: {
     main: "System",
