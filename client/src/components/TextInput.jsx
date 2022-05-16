@@ -1,7 +1,6 @@
 import { TextInput as NativeTextInput, StyleSheet } from "react-native"
 import {
   Input,
-  Box,
   Button,
   FormControl,
   WarningOutlineIcon,
