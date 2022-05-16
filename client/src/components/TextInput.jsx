@@ -1,5 +1,11 @@
 import { TextInput as NativeTextInput, StyleSheet } from "react-native"
-import { Input, Box, Button } from "native-base"
+import {
+  Input,
+  Box,
+  Button,
+  FormControl,
+  WarningOutlineIcon,
+} from "native-base"
 import { useState } from "react"
 
 const styles = StyleSheet.create({
@@ -16,7 +22,7 @@ const TextInput = ({ style, error, ...props }) => {
 
   if (props.name === "password") {
     return (
-      <Box alignItems="center">
+      <FormControl isInvalid={error}>
         <Input
           {...props}
           variant="underlined"
@@ -33,11 +39,24 @@ const TextInput = ({ style, error, ...props }) => {
             </Button>
           }
         />
-      </Box>
+        <FormControl.ErrorMessage
+          leftIcon={<WarningOutlineIcon size="xs" />}
+        >
+          {error}
+        </FormControl.ErrorMessage>
+      </FormControl>
     )
   }
 
-  return <Input variant="underlined" style={textInputStyle} {...props} />
+  return (
+    <FormControl isInvalid={error}>
+      <Input variant="underlined" style={textInputStyle} {...props} />
+      <FormControl.ErrorMessage
+        leftIcon={<WarningOutlineIcon size="xs" />}
+      >{error}
+      </FormControl.ErrorMessage>
+    </FormControl>
+  )
 }
 
 export default TextInput
