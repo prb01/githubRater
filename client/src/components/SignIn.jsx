@@ -3,6 +3,7 @@ import FormikTextInput from "./FormikTextInput"
 import { Formik } from "formik"
 import { Button, VStack } from "native-base"
 import * as yup from "yup"
+import useSignIn from "../hooks/useSignIn"
 
 const styles = StyleSheet.create({
   form: {
@@ -16,8 +17,15 @@ const validationSchema = yup.object().shape({
 })
 
 const SignIn = () => {
-  const onSubmit = (values) => {
-    console.log(values)
+  const [signIn] = useSignIn()
+
+  const onSubmit = async ({ username, password }) => {
+    try {
+      const { data } = await signIn({ username, password })
+      console.log(data)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return (
