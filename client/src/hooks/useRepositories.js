@@ -4,17 +4,19 @@ import { useQuery } from "@apollo/client"
 
 const useRepositories = () => {
   const [repositories, setRepositories] = useState()
-  // const [loading, setLoading] = useState(false)
   const { data, error, loading } = useQuery(GET_REPOSITORIES, {
     fetchPolicy: "cache-and-network",
   })
+
+  if (error) {
+    console.log(error)
+  }
 
   useEffect(() => {
     if (!loading) {
       setRepositories(data.repositories)
     }
   }, [loading])
-  
 
   const refetchRepositories = async () => {
     await client.refetchQueries({

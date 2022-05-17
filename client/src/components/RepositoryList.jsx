@@ -33,18 +33,3 @@ const RepositoryList = () => {
 }
 
 export default RepositoryList
-
-// const App = () => {
-//   const renderItem = ({ item }) => (
-//     <Item title={item.title} />
-//   );
-
-//   return (
-//     <SafeAreaView style={styles.container}>
-//       <FlatList
-//         data={DATA}
-//         renderItem={renderItem}
-//         keyExtractor={item => item.id}
-//       />
-//     </SafeAreaView>
-//   );

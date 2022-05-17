@@ -18,6 +18,7 @@ export const GET_REPOSITORIES = gql`
           description
           language
           ratingAverage
+          fullName
         }
       }
     }
