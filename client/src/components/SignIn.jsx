@@ -4,6 +4,7 @@ import { Formik } from "formik"
 import { Button, VStack } from "native-base"
 import * as yup from "yup"
 import useSignIn from "../hooks/useSignIn"
+import AuthStorage from "../utils/authStorage"
 
 const styles = StyleSheet.create({
   form: {
@@ -22,7 +23,11 @@ const SignIn = () => {
   const onSubmit = async ({ username, password }) => {
     try {
       const { data } = await signIn({ username, password })
-      console.log(data)
+      
+      if (data) {
+        const auth = new AuthStorage
+        auth.setAccessToken(data.authenticate.accessToken)
+      }
     } catch (e) {
       console.log(e)
     }
