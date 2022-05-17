@@ -1,8 +1,13 @@
-import { View, StyleSheet, Image, Dimensions } from "react-native"
-import { Text, Subheading } from "./Text"
+import { View, StyleSheet, Image, Pressable } from "react-native"
 import theme from "../theme"
 import ItemSummary from "./ItemSummary"
 import ItemStat from "./ItemStat"
+import { useNavigate, useParams } from "react-router-native"
+import { Button } from "native-base"
+import * as Linking from "expo-linking"
+import { Text } from "./Text"
+import { GET_REPOSITORY } from "../graphql/queries"
+import { useQuery } from "@apollo/client"
 
 const humanize = (number) => {
   if (number >= 1000000) {
@@ -59,29 +64,54 @@ const styles = StyleSheet.create({
 })
 
 const RepositoryItem = ({ item }) => {
-  return (
-    <View style={styles.container}>
-      <View style={styles.containerRow}>
-        <Image
-          style={styles.tinyLogo}
-          source={{
-            uri: item.ownerAvatarUrl,
-          }}
-        />
-        <ItemSummary
-          name={item.fullName}
-          description={item.description}
-          language={item.language}
-        />
-      </View>
+  const { repositoryId } = useParams()
+  const navigate = useNavigate()
+  const { data, error, loading } = useQuery(GET_REPOSITORY, {
+    variables: { repositoryId },
+  })
 
-      <View style={styles.containerStats}>
-        <ItemStat num={item.stargazersCount} label={"Stars"} />
-        <ItemStat num={item.forksCount} label={"Forks"} />
-        <ItemStat num={item.reviewCount} label={"Reviews"} />
-        <ItemStat num={item.ratingAverage} label={"Rating"} />
+  if (repositoryId && loading) {
+    return <Text>loading...</Text>
+  }
+
+  item = item || data.repository
+
+  const openGitHub = () => {
+    Linking.openURL(item.url)
+  }
+
+  return (
+    <Pressable
+      onPress={() =>
+        navigate(`/repositories/${item.id}`, { replace: true })
+      }
+    >
+      <View style={styles.container}>
+        <View style={styles.containerRow}>
+          <Image
+            style={styles.tinyLogo}
+            source={{
+              uri: item.ownerAvatarUrl,
+            }}
+          />
+          <ItemSummary
+            name={item.fullName}
+            description={item.description}
+            language={item.language}
+          />
+        </View>
+
+        <View style={styles.containerStats}>
+          <ItemStat num={item.stargazersCount} label={"Stars"} />
+          <ItemStat num={item.forksCount} label={"Forks"} />
+          <ItemStat num={item.reviewCount} label={"Reviews"} />
+          <ItemStat num={item.ratingAverage} label={"Rating"} />
+        </View>
+        {repositoryId ? (
+          <Button onPress={openGitHub}>Open in GitHub</Button>
+        ) : null}
       </View>
-    </View>
+    </Pressable>
   )
 }
 
