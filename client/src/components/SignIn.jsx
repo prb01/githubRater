@@ -4,7 +4,7 @@ import { Formik } from "formik"
 import { Button, VStack } from "native-base"
 import * as yup from "yup"
 import useSignIn from "../hooks/useSignIn"
-import AuthStorage from "../utils/authStorage"
+import { useNavigate } from "react-router-native"
 
 const styles = StyleSheet.create({
   form: {
@@ -19,15 +19,12 @@ const validationSchema = yup.object().shape({
 
 const SignIn = () => {
   const [signIn] = useSignIn()
+  const navigate = useNavigate()
 
   const onSubmit = async ({ username, password }) => {
     try {
       const { data } = await signIn({ username, password })
-      
-      if (data) {
-        const auth = new AuthStorage
-        auth.setAccessToken(data.authenticate.accessToken)
-      }
+      navigate("/", { replace: true })
     } catch (e) {
       console.log(e)
     }
