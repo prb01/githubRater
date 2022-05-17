@@ -1,8 +1,6 @@
 import { FlatList, View, StyleSheet } from "react-native"
 import RepositoryItem from "./RepositoryItem"
-import { useEffect, useState } from "react"
 import useRepositories from "../hooks/useRepositories"
-import { enableExpoCliLogging } from "expo/build/logs/Logs"
 
 const styles = StyleSheet.create({
   separator: {

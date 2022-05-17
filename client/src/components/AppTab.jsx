@@ -1,4 +1,4 @@
-import { View, StyleSheet, Pressable } from "react-native"
+import { View, StyleSheet } from "react-native"
 import { Link } from "react-router-native"
 import { Subheading } from "./Text"
 import theme from "../theme"
@@ -12,9 +12,9 @@ const styles = StyleSheet.create({
   },
 })
 
-const AppTab = ({ linkTo, children, style }) => {
+const AppTab = ({ linkTo, children, style, onPress }) => {
   return (
-    <Link to={linkTo} style={style}>
+    <Link to={linkTo} style={style} onPress={onPress}>
       <View style={styles.flexTab}>
         <Subheading style={styles.tabText}>{children}</Subheading>
       </View>
