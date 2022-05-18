@@ -131,6 +131,7 @@ export const SingleRepository = () => {
   const { repositoryId } = useParams()
   const { data, error, loading } = useQuery(GET_REPOSITORY, {
     variables: { repositoryId },
+    fetchPolicy: "cache-and-network",
   })
 
   if (repositoryId && loading) {
