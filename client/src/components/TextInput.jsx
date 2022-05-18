@@ -19,7 +19,8 @@ const TextInput = ({ style, error, ...props }) => {
   const [show, setShow] = useState(false)
   const handleClick = () => setShow(!show)
 
-  if (props.name === "password") {
+  // if (props.showHide === "password")
+  if (props.showHide) {
     return (
       <FormControl isInvalid={error}>
         <Input
@@ -49,10 +50,20 @@ const TextInput = ({ style, error, ...props }) => {
 
   return (
     <FormControl isInvalid={error}>
-      <Input variant="underlined" style={textInputStyle} {...props} />
+      <Input
+        variant="underlined"
+        style={textInputStyle}
+        type={
+          ["password", "passwordConfirm"].includes(props.name)
+            ? "password"
+            : "text"
+        }
+        {...props}
+      />
       <FormControl.ErrorMessage
         leftIcon={<WarningOutlineIcon size="xs" />}
-      >{error}
+      >
+        {error}
       </FormControl.ErrorMessage>
     </FormControl>
   )

@@ -48,9 +48,14 @@ const AppBar = () => {
           Logout
         </AppTab>
       ) : (
-        <AppTab style={styles.tabRight} linkTo="/signin">
-          Login
-        </AppTab>
+        <>
+          <AppTab style={styles.tabRight} linkTo="/signup">
+            Sign Up
+          </AppTab>
+          <AppTab style={styles.tabRight} linkTo="/signin">
+            Login
+          </AppTab>
+        </>
       )}
     </View>
   )

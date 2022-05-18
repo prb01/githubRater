@@ -8,7 +8,8 @@ import { useNavigate } from "react-router-native"
 
 const styles = StyleSheet.create({
   form: {
-    margin: 20,
+    padding: 20,
+    backgroundColor: "#fff",
   },
 })
 
@@ -28,7 +29,11 @@ export const SignInContainer = ({ onSubmit }) => {
         <View style={styles.form}>
           <VStack space={4}>
             <FormikTextInput name="username" placeholder="username" />
-            <FormikTextInput name="password" placeholder="password" />
+            <FormikTextInput
+              name="password"
+              placeholder="password"
+              showHide={true}
+            />
             <Button onPress={handleSubmit}>Login</Button>
           </VStack>
         </View>

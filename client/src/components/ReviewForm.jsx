@@ -8,7 +8,8 @@ import useCreateReview from "../hooks/useCreateReview"
 
 const styles = StyleSheet.create({
   form: {
-    margin: 20,
+    padding: 20,
+    backgroundColor: "#fff",
   },
 })
 
