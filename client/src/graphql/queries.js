@@ -18,6 +18,19 @@ const REPO_DETAIL = gql`
   }
 `
 
+const REVIEW_DETAIL = gql`
+  fragment ReviewDetail on Review {
+    id
+    text
+    rating
+    createdAt
+    user {
+      id
+      username
+    }
+  }
+`
+
 export const GET_REPOSITORIES = gql`
   query Repositories {
     repositories {
@@ -36,9 +49,17 @@ export const GET_REPOSITORY = gql`
   query Repository($repositoryId: ID!) {
     repository(id: $repositoryId) {
       ...RepoDetail
+      reviews {
+        edges {
+          node {
+            ...ReviewDetail
+          }
+        }
+      }
     }
   }
   ${REPO_DETAIL}
+  ${REVIEW_DETAIL}
 `
 
 export const CURRENT_USER = gql`

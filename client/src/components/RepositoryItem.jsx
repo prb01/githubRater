@@ -1,13 +1,15 @@
-import { View, StyleSheet, Image, Pressable } from "react-native"
+import { FlatList, View, StyleSheet, Image, Pressable } from "react-native"
 import theme from "../theme"
 import ItemSummary from "./ItemSummary"
 import ItemStat from "./ItemStat"
 import { useNavigate, useParams } from "react-router-native"
 import { Button } from "native-base"
 import * as Linking from "expo-linking"
-import { Text } from "./Text"
+import { Text, Subheading } from "./Text"
 import { GET_REPOSITORY } from "../graphql/queries"
 import { useQuery } from "@apollo/client"
+import { ItemSeparator } from "./RepositoryList"
+import moment from "moment"
 
 const humanize = (number) => {
   if (number >= 1000000) {
@@ -30,12 +32,7 @@ const styles = StyleSheet.create({
   containerRow: {
     display: "flex",
     flexDirection: "row",
-    // backgroundColor: theme.colors.primary,
-  },
-  containerName: {
-    display: "flex",
-    justifyContent: "center",
-    flexShrink: 1,
+    marginBottom: 5
   },
   containerStats: {
     display: "flex",
@@ -44,37 +41,30 @@ const styles = StyleSheet.create({
     margin: 8,
     marginTop: 12,
   },
-  statItem: {
-    display: "flex",
-    alignItems: "center",
-  },
   tinyLogo: {
     width: 50,
     height: 50,
     borderRadius: 8,
     marginRight: 14,
   },
-  languageBox: {
-    backgroundColor: theme.colors.primary,
-    marginTop: 8,
-    padding: 6,
-    alignSelf: "flex-start",
-    borderRadius: 8,
+  ratingContainer: {
+    width: 50,
+    height: 50,
+    borderWidth: 2,
+    borderColor: theme.colors.primary,
+    borderRadius: 25,
+    marginRight: 14,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  rating: {
+    color: theme.colors.primary,
   },
 })
 
-const RepositoryItem = ({ item }) => {
-  const { repositoryId } = useParams()
+export const RepositoryInfo = ({ repository, repositoryId }) => {
   const navigate = useNavigate()
-  const { data, error, loading } = useQuery(GET_REPOSITORY, {
-    variables: { repositoryId },
-  })
-
-  if (repositoryId && loading) {
-    return <Text>loading...</Text>
-  }
-
-  item = item || data.repository
 
   const openGitHub = () => {
     Linking.openURL(item.url)
@@ -83,7 +73,7 @@ const RepositoryItem = ({ item }) => {
   return (
     <Pressable
       onPress={() =>
-        navigate(`/repositories/${item.id}`, { replace: true })
+        navigate(`/repositories/${repository.id}`, { replace: true })
       }
     >
       <View style={styles.container}>
@@ -91,21 +81,21 @@ const RepositoryItem = ({ item }) => {
           <Image
             style={styles.tinyLogo}
             source={{
-              uri: item.ownerAvatarUrl,
+              uri: repository.ownerAvatarUrl,
             }}
           />
           <ItemSummary
-            name={item.fullName}
-            description={item.description}
-            language={item.language}
+            name={repository.fullName}
+            description={repository.description}
+            language={repository.language}
           />
         </View>
 
         <View style={styles.containerStats}>
-          <ItemStat num={item.stargazersCount} label={"Stars"} />
-          <ItemStat num={item.forksCount} label={"Forks"} />
-          <ItemStat num={item.reviewCount} label={"Reviews"} />
-          <ItemStat num={item.ratingAverage} label={"Rating"} />
+          <ItemStat num={repository.stargazersCount} label={"Stars"} />
+          <ItemStat num={repository.forksCount} label={"Forks"} />
+          <ItemStat num={repository.reviewCount} label={"Reviews"} />
+          <ItemStat num={repository.ratingAverage} label={"Rating"} />
         </View>
         {repositoryId ? (
           <Button onPress={openGitHub}>Open in GitHub</Button>
@@ -113,6 +103,65 @@ const RepositoryItem = ({ item }) => {
       </View>
     </Pressable>
   )
+}
+
+const ReviewItem = ({ review }) => {
+  const createdAt = moment(review.createdAt).format("YYYY-MMM-DD HH:MM a")
+  
+  return (
+    <View style={styles.container}>
+      <View style={styles.containerRow}>
+        <View style={styles.ratingContainer}>
+          <Text fontWeight="bold" style={styles.rating}>
+            {review.rating}
+          </Text>
+        </View>
+
+        <ItemSummary name={review.user.username} description={createdAt} />
+      </View>
+
+      <View style={styles.containerRow}>
+        <Subheading>{review.text}</Subheading>
+      </View>
+    </View>
+  )
+}
+
+export const SingleRepository = () => {
+  const { repositoryId } = useParams()
+  const { data, error, loading } = useQuery(GET_REPOSITORY, {
+    variables: { repositoryId },
+  })
+
+  if (repositoryId && loading) {
+    return <Text>loading...</Text>
+  }
+
+  const repository = data.repository
+
+  const reviews = repository
+    ? repository.reviews.edges.map((edge) => edge.node)
+    : []
+
+  return (
+    <FlatList
+      data={reviews}
+      renderItem={({ item }) => <ReviewItem review={item} />}
+      keyExtractor={({ id }) => id}
+      ItemSeparatorComponent={ItemSeparator}
+      ListHeaderComponent={() => (
+        <RepositoryInfo
+          repository={repository}
+          repositoryId={repositoryId}
+        />
+      )}
+      ListHeaderComponentStyle={{ marginBottom: 10 }}
+    />
+  )
+}
+
+const RepositoryItem = ({ item }) => {
+  return <RepositoryInfo repository={item} />
 }
 
 export default RepositoryItem

@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
 })
 
 const ItemLanguage = ({ language }) => {
+  if (!language) return null
   return (
     <View style={styles.languageBox}>
       <Text fontWeight="bold" color="textOnDark">
