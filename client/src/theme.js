@@ -5,7 +5,8 @@ const theme = {
     textPrimary: "#24292e",
     textSecondary: "#586069",
     textOnDark: "#fff",
-    primary: "#0366d6",
+    primary: "#195daa",
+    accent: "#e4f0ff",
     menuBackground: "#24292e",
   },
   fontSizes: {
@@ -16,7 +17,8 @@ const theme = {
     main: Platform.select({
       android: "Roboto",
       ios: "Arial",
-      default: "System"}),
+      default: "System",
+    }),
   },
   fontWeights: {
     normal: "400",
