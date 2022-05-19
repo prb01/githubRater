@@ -87,7 +87,10 @@ const ReviewItem = ({ review, me }) => {
           </Text>
         </View>
 
-        <ItemSummary name={review.user.username} description={createdAt} />
+        <ItemSummary
+          name={me ? review.repository.fullName : review.user.username}
+          description={createdAt}
+        />
       </View>
 
       <View style={styles.containerRow}>
