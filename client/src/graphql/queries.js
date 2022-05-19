@@ -21,6 +21,7 @@ const REPO_DETAIL = gql`
 const REVIEW_DETAIL = gql`
   fragment ReviewDetail on Review {
     id
+    repositoryId
     text
     rating
     createdAt
@@ -64,11 +65,7 @@ export const GET_REPOSITORIES = gql`
 `
 
 export const GET_REPOSITORY = gql`
-  query Repository(
-    $repositoryId: ID!
-    $first: Int
-    $after: String
-  ) {
+  query Repository($repositoryId: ID!, $first: Int, $after: String) {
     repository(id: $repositoryId) {
       ...RepoDetail
       reviews(first: $first, after: $after) {
@@ -92,10 +89,33 @@ export const GET_REPOSITORY = gql`
 `
 
 export const CURRENT_USER = gql`
-  {
+  query Me($first: Int, $after: String, $includeReviews: Boolean = false) {
     me {
       id
       username
+      reviewCount
+      reviews(first: $first, after: $after) @include(if: $includeReviews) {
+        totalCount
+        pageInfo {
+          hasNextPage
+          startCursor
+          endCursor
+        }
+        edges {
+          cursor
+          node {
+            id
+            user {
+              username
+            }
+            repositoryId
+            rating
+            createdAt
+            text
+          }
+        }
+      }
     }
   }
+  ${REVIEW_DETAIL}
 `

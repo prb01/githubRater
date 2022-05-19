@@ -36,7 +36,10 @@ const AppBar = () => {
       <ScrollView horizontal={true}>
         <AppTab linkTo="/">Repositories</AppTab>
         {data && data.me && (
-          <AppTab linkTo="/review">Create a review</AppTab>
+          <>
+            <AppTab linkTo="/review">Create a review</AppTab>
+            <AppTab linkTo="/me/reviews">My Reviews</AppTab>
+          </>
         )}
       </ScrollView>
       {data && data.me ? (

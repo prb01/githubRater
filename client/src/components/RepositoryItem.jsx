@@ -1,14 +1,12 @@
 import { FlatList, View, StyleSheet, Image, Pressable } from "react-native"
-import theme from "../theme"
 import ItemSummary from "./ItemSummary"
 import ItemStat from "./ItemStat"
 import { useNavigate, useParams } from "react-router-native"
 import { Button } from "native-base"
 import * as Linking from "expo-linking"
-import { Text, Subheading } from "./Text"
 import ItemSeparator from "./ItemSeparator"
-import moment from "moment"
 import useRepo from "../hooks/useRepo"
+import ReviewItem from "./ReviewItem"
 
 const humanize = (number) => {
   if (number >= 1000000) {
@@ -45,20 +43,6 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 8,
     marginRight: 14,
-  },
-  ratingContainer: {
-    width: 50,
-    height: 50,
-    borderWidth: 2,
-    borderColor: theme.colors.primary,
-    borderRadius: 25,
-    marginRight: 14,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  rating: {
-    color: theme.colors.primary,
   },
 })
 
@@ -101,28 +85,6 @@ const RepositoryInfo = ({ repository, repositoryId }) => {
         ) : null}
       </View>
     </Pressable>
-  )
-}
-
-const ReviewItem = ({ review }) => {
-  const createdAt = moment(review.createdAt).format("YYYY-MMM-DD HH:MM a")
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.containerRow}>
-        <View style={styles.ratingContainer}>
-          <Text fontWeight="bold" style={styles.rating}>
-            {review.rating}
-          </Text>
-        </View>
-
-        <ItemSummary name={review.user.username} description={createdAt} />
-      </View>
-
-      <View style={styles.containerRow}>
-        <Subheading>{review.text}</Subheading>
-      </View>
-    </View>
   )
 }
 

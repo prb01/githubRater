@@ -1,6 +1,7 @@
 import { StyleSheet, View } from "react-native"
 import { Route, Routes, Navigate } from "react-router-native"
 import AppBar from "./AppBar"
+import MyReviews from "./MyReviews"
 import { SingleRepository } from "./RepositoryItem"
 import RepositoryList from "./RepositoryList"
 import ReviewForm from "./ReviewForm"
@@ -25,6 +26,7 @@ const Main = () => {
           <Route path="/review" element={<ReviewForm />} exact />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/me/reviews" element={<MyReviews />} />
           <Route
             path="/repositories/:repositoryId"
             element={<SingleRepository />}
