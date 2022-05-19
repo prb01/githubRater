@@ -6,10 +6,9 @@ import { useNavigate, useParams } from "react-router-native"
 import { Button } from "native-base"
 import * as Linking from "expo-linking"
 import { Text, Subheading } from "./Text"
-import { GET_REPOSITORY } from "../graphql/queries"
-import { useQuery } from "@apollo/client"
-import { ItemSeparator } from "./RepositoryList"
+import ItemSeparator from "./ItemSeparator"
 import moment from "moment"
+import useRepo from "../hooks/useRepo"
 
 const humanize = (number) => {
   if (number >= 1000000) {
@@ -32,7 +31,7 @@ const styles = StyleSheet.create({
   containerRow: {
     display: "flex",
     flexDirection: "row",
-    marginBottom: 5
+    marginBottom: 5,
   },
   containerStats: {
     display: "flex",
@@ -63,7 +62,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export const RepositoryInfo = ({ repository, repositoryId }) => {
+const RepositoryInfo = ({ repository, repositoryId }) => {
   const navigate = useNavigate()
 
   const openGitHub = () => {
@@ -107,7 +106,7 @@ export const RepositoryInfo = ({ repository, repositoryId }) => {
 
 const ReviewItem = ({ review }) => {
   const createdAt = moment(review.createdAt).format("YYYY-MMM-DD HH:MM a")
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.containerRow}>
@@ -129,20 +128,18 @@ const ReviewItem = ({ review }) => {
 
 export const SingleRepository = () => {
   const { repositoryId } = useParams()
-  const { data, error, loading } = useQuery(GET_REPOSITORY, {
-    variables: { repositoryId },
-    fetchPolicy: "cache-and-network",
-  })
-
-  if (repositoryId && loading) {
-    return <Text>loading...</Text>
-  }
-
-  const repository = data.repository
+  const variables = { first: 3, repositoryId }
+  const { repository, fetchMore } = useRepo(variables)
 
   const reviews = repository
     ? repository.reviews.edges.map((edge) => edge.node)
     : []
+
+    const onEndReach = () => {
+      fetchMore()
+    }
+
+  if (!repository) return null
 
   return (
     <FlatList
@@ -157,6 +154,8 @@ export const SingleRepository = () => {
         />
       )}
       ListHeaderComponentStyle={{ marginBottom: 10 }}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
     />
   )
 }

@@ -7,14 +7,9 @@ import { useState } from "react"
 import theme from "../theme"
 import { useDebouncedCallback } from "use-debounce"
 import React from "react"
+import ItemSeparator from "./ItemSeparator"
 
-const styles = StyleSheet.create({
-  separator: {
-    height: 10,
-  },
-})
 
-export const ItemSeparator = () => <View style={styles.separator} />
 
 export const SearchBar = ({ search, setSearch }) => {
   const [text, setText] = useState("")
@@ -85,7 +80,7 @@ const SortingMenu = ({ sortMethod, setSortMethod }) => {
   )
 }
 
-export class RepositoryListContainer extends React.Component {
+class RepositoryListContainer extends React.Component {
   renderHeader = () => {
     const props = this.props
 
@@ -116,38 +111,24 @@ export class RepositoryListContainer extends React.Component {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={this.renderHeader}
+        onEndReached={props.onEndReach}
+        onEndReachedThreshold={0.5}
       />
     )
   }
-  // const repositoryNodes = props.repositories
-  //   ? props.repositories.edges.map((edge) => edge.node)
-  //   : []
-
-  // const renderItem = ({ item }) => <RepositoryItem item={item} />
-
-  // return (
-  //   <FlatList
-  //     data={repositoryNodes}
-  //     ItemSeparatorComponent={ItemSeparator}
-  //     renderItem={renderItem}
-  //     keyExtractor={(item) => item.id}
-  //     ListHeaderComponent={() => (
-  //       <>
-  //         <SearchBar search={props.search} setSearch={props.setSearch} />
-  //         <SortingMenu
-  //           sortMethod={props.sortMethod}
-  //           setSortMethod={props.setSortMethod}
-  //         />
-  //       </>
-  //     )}
-  //   />
-  // )
 }
 
 const RepositoryList = () => {
   const [sortMethod, setSortMethod] = useState("")
   const [search, setSearch] = useState("")
-  const { repositories } = useRepositories(sortMethod, search)
+  const sortVariables = sortMethod ? JSON.parse(sortMethod) : null
+  const searchVariable = { searchKeyword: search }
+  const variables = { first: 5, ...sortVariables, ...searchVariable }
+  const { repositories, fetchMore } = useRepositories(variables)
+
+  const onEndReach = () => {
+    fetchMore()
+  }
 
   return (
     <RepositoryListContainer
@@ -156,6 +137,7 @@ const RepositoryList = () => {
       setSortMethod={setSortMethod}
       search={search}
       setSearch={setSearch}
+      onEndReach={onEndReach}
     />
   )
 }
