@@ -50,7 +50,7 @@ const RepositoryInfo = ({ repository, repositoryId }) => {
   const navigate = useNavigate()
 
   const openGitHub = () => {
-    Linking.openURL(item.url)
+    Linking.openURL(repository.url)
   }
 
   return (

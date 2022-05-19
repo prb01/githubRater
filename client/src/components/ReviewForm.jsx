@@ -72,9 +72,12 @@ const ReviewForm = () => {
         rating: Number(rating),
         text,
       })
-      navigate(`/repositories/${ownerName}.${repositoryName}`, {
-        replace: true,
-      })
+      navigate(
+        `/repositories/${ownerName.toLowerCase()}.${repositoryName.toLowerCase()}`,
+        {
+          replace: true,
+        }
+      )
     } catch (e) {
       console.log(e)
     }
