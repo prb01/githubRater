@@ -104,14 +104,7 @@ export const CURRENT_USER = gql`
         edges {
           cursor
           node {
-            id
-            user {
-              username
-            }
-            repositoryId
-            rating
-            createdAt
-            text
+           ...ReviewDetail
           }
         }
       }

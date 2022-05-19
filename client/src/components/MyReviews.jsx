@@ -18,7 +18,7 @@ const MyReviews = () => {
   return (
     <FlatList
       data={reviews}
-      renderItem={({ item }) => <ReviewItem review={item} />}
+      renderItem={({ item }) => <ReviewItem review={item} me={true} />}
       keyExtractor={({ id }) => id}
       ItemSeparatorComponent={ItemSeparator}
       onEndReached={onEndReach}

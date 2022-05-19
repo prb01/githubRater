@@ -7,6 +7,7 @@ const theme = {
     textOnDark: "#fff",
     primary: "#195daa",
     accent: "#e4f0ff",
+    negative: "#a33651",
     menuBackground: "#24292e",
   },
   fontSizes: {
