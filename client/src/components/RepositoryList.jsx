@@ -1,9 +1,12 @@
 import { FlatList, View, StyleSheet } from "react-native"
 import RepositoryItem from "./RepositoryItem"
 import useRepositories from "../hooks/useRepositories"
-import { Select, CheckIcon, CircularProgress } from "native-base"
+import { Select, CheckIcon, Input, Icon, VStack } from "native-base"
+import { MaterialIcons } from "@expo/vector-icons"
 import { useState } from "react"
 import theme from "../theme"
+import { useDebouncedCallback } from "use-debounce"
+import React from "react"
 
 const styles = StyleSheet.create({
   separator: {
@@ -12,6 +15,41 @@ const styles = StyleSheet.create({
 })
 
 export const ItemSeparator = () => <View style={styles.separator} />
+
+export const SearchBar = ({ search, setSearch }) => {
+  const [text, setText] = useState("")
+  const debounced = useDebouncedCallback((value) => {
+    setSearch(value)
+  }, 300)
+
+  return (
+    <VStack w="95%" p="2" space={5} alignSelf="center">
+      <Input
+        placeholder="Filter repositories"
+        width="100%"
+        borderRadius="10"
+        variant="filled"
+        py="2"
+        px="1"
+        fontSize="14"
+        value={text}
+        onChangeText={(text) => {
+          setText(text)
+          debounced(text)
+        }}
+        InputLeftElement={
+          <Icon
+            m="2"
+            ml="3"
+            size="6"
+            color="gray.400"
+            as={<MaterialIcons name="search" />}
+          />
+        }
+      />
+    </VStack>
+  )
+}
 
 const SortingMenu = ({ sortMethod, setSortMethod }) => {
   return (
@@ -47,42 +85,77 @@ const SortingMenu = ({ sortMethod, setSortMethod }) => {
   )
 }
 
-export const RepositoryListContainer = ({
-  repositories,
-  sortMethod,
-  setSortMethod,
-}) => {
-  const repositoryNodes = repositories
-    ? repositories.edges.map((edge) => edge.node)
-    : []
+export class RepositoryListContainer extends React.Component {
+  renderHeader = () => {
+    const props = this.props
 
-  const renderItem = ({ item }) => <RepositoryItem item={item} />
-
-  return (
-    <FlatList
-      data={repositoryNodes}
-      ItemSeparatorComponent={ItemSeparator}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.id}
-      ListHeaderComponent={() => (
+    return (
+      <>
+        <SearchBar search={props.search} setSearch={props.setSearch} />
         <SortingMenu
-          sortMethod={sortMethod}
-          setSortMethod={setSortMethod}
+          sortMethod={props.sortMethod}
+          setSortMethod={props.setSortMethod}
         />
-      )}
-    />
-  )
+      </>
+    )
+  }
+
+  render() {
+    const props = this.props
+
+    const repositoryNodes = props.repositories
+      ? props.repositories.edges.map((edge) => edge.node)
+      : []
+
+    const renderItem = ({ item }) => <RepositoryItem item={item} />
+
+    return (
+      <FlatList
+        data={repositoryNodes}
+        ItemSeparatorComponent={ItemSeparator}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        ListHeaderComponent={this.renderHeader}
+      />
+    )
+  }
+  // const repositoryNodes = props.repositories
+  //   ? props.repositories.edges.map((edge) => edge.node)
+  //   : []
+
+  // const renderItem = ({ item }) => <RepositoryItem item={item} />
+
+  // return (
+  //   <FlatList
+  //     data={repositoryNodes}
+  //     ItemSeparatorComponent={ItemSeparator}
+  //     renderItem={renderItem}
+  //     keyExtractor={(item) => item.id}
+  //     ListHeaderComponent={() => (
+  //       <>
+  //         <SearchBar search={props.search} setSearch={props.setSearch} />
+  //         <SortingMenu
+  //           sortMethod={props.sortMethod}
+  //           setSortMethod={props.setSortMethod}
+  //         />
+  //       </>
+  //     )}
+  //   />
+  // )
 }
 
 const RepositoryList = () => {
   const [sortMethod, setSortMethod] = useState("")
-  const { repositories } = useRepositories(sortMethod)
+  const [search, setSearch] = useState("")
+  const { repositories } = useRepositories(sortMethod, search)
 
   return (
     <RepositoryListContainer
       repositories={repositories}
       sortMethod={sortMethod}
       setSortMethod={setSortMethod}
+      search={search}
+      setSearch={setSearch}
     />
   )
 }

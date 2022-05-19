@@ -33,10 +33,15 @@ const REVIEW_DETAIL = gql`
 
 export const GET_REPOSITORIES = gql`
   query Repositories(
-    $orderBy: AllRepositoriesOrderBy
     $orderDirection: OrderDirection
+    $orderBy: AllRepositoriesOrderBy
+    $searchKeyword: String
   ) {
-    repositories(orderBy: $orderBy, orderDirection: $orderDirection) {
+    repositories(
+      orderDirection: $orderDirection
+      orderBy: $orderBy
+      searchKeyword: $searchKeyword
+    ) {
       totalCount
       edges {
         node {
